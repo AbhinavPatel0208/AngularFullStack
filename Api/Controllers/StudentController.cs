@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Api.Data;
 using Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+
 
 namespace Api.Controllers
 {
@@ -49,6 +44,58 @@ namespace Api.Controllers
             return BadRequest();
         }
 
-        // 21:51
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Student>> GetStudent(int id)
+        {
+            var student = await _context.Students.FindAsync(id);
+            if (student is null)
+            {
+                return NotFound();
+            }
+            return Ok(student);
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var student = await _context.Students.FindAsync(id);
+            if (student is null)
+            {
+                return NotFound();
+            }
+            _context.Remove(student);
+
+            var result = await _context.SaveChangesAsync();
+            if (result > 0)
+            {
+                return Ok("Student Deleted");
+            }
+
+            return BadRequest("Unable To Delete the student");
+        }
+
+        [HttpPut("{id:int}")]
+        // api/students/id
+        public async Task<IActionResult> EditStudent(int id, Student student)
+        {
+            var studentFromDb = await _context.Students.FindAsync(id);
+            if (studentFromDb is null)
+            {
+                return BadRequest("Student Not Found");
+            }
+            studentFromDb.Name = student.Name;
+            studentFromDb.Address = student.Address;
+            studentFromDb.Email = student.Email;
+            studentFromDb.PhoneNumber = student.PhoneNumber;
+
+            var result = await _context.SaveChangesAsync();
+            if (result > 0)
+            {
+                return Ok("Student Successfully Updated");
+            }
+
+            return BadRequest("Unable To Update the student data");
+        }
     }
 }
