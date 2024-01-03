@@ -1,9 +1,9 @@
 export interface Student{ 
  
   id: number;
-  Name: string;
-  Address: string;
-  PhoneNumber: string; 
-  Email: string;
+  name: string;
+  address: string;
+  phoneNumber: string; 
+  email: string;
   
 }
