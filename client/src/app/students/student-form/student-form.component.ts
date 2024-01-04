@@ -2,7 +2,7 @@ import { StudentsService } from './../../services/students.service';
 import { JsonPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -16,12 +16,13 @@ export class StudentFormComponent implements OnInit,OnDestroy{
 
   form!: FormGroup;
   studentformSubscription!: Subscription;
+  paramsSubscription!: Subscription;
   StudentsService = inject(StudentsService);
 
 
   isEdit=false;
 
-  constructor(private fb: FormBuilder,private activatedRouter:ActivatedRoute)
+  constructor(private fb: FormBuilder,private activatedRouter:ActivatedRoute,private router:Router)
   { 
 
   }
@@ -30,12 +31,18 @@ export class StudentFormComponent implements OnInit,OnDestroy{
     if (this.studentformSubscription) { 
       this.studentformSubscription.unsubscribe();
     }
+
+    if (this.paramsSubscription) { 
+      this.paramsSubscription.unsubscribe();
+    }
+
   }
 
   onSubmit() { 
     this.studentformSubscription=this.StudentsService.addStudent(this.form.value).subscribe({
       next: (response) => { 
         console.log(response);
+        this.router.navigateByUrl('/students');
       },
       error: err => { 
         console.log(err);
@@ -46,11 +53,14 @@ export class StudentFormComponent implements OnInit,OnDestroy{
 
   ngOnInit(): void {
 
-    this.activatedRouter.params.subscribe(
+    this.paramsSubscription=this.activatedRouter.params.subscribe(
       {
         next:(response)=> {
           console.log(response['id']);
-          this.StudentsService.getStudentMethod(response['id']).subscribe({
+          let id = response['id'];
+          if (!id) return;
+
+          this.StudentsService.getStudentMethod(id).subscribe({
             next:response=> {
               this.form.patchValue(response)
               this.isEdit = true;
