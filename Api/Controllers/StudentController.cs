@@ -69,7 +69,7 @@ namespace Api.Controllers
             var result = await _context.SaveChangesAsync();
             if (result > 0)
             {
-                return Ok("Student Deleted");
+                return Ok();
             }
 
             return BadRequest("Unable To Delete the student");
@@ -92,10 +92,11 @@ namespace Api.Controllers
             var result = await _context.SaveChangesAsync();
             if (result > 0)
             {
-                return Ok("Student Successfully Updated");
+                return Ok();
             }
 
-            return BadRequest("Unable To Update the student data");
+            return BadRequest();
         }
     }
 }
+

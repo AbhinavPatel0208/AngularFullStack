@@ -3,6 +3,7 @@ import { JsonPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -22,7 +23,11 @@ export class StudentFormComponent implements OnInit,OnDestroy{
 
   isEdit=false;
 
-  constructor(private fb: FormBuilder,private activatedRouter:ActivatedRoute,private router:Router)
+  constructor(private fb: FormBuilder,
+    private activatedRouter: ActivatedRoute,
+    private router: Router,
+    private toasterService:ToastrService
+  )
   { 
 
   }
@@ -42,6 +47,7 @@ export class StudentFormComponent implements OnInit,OnDestroy{
     this.studentformSubscription=this.StudentsService.addStudent(this.form.value).subscribe({
       next: (response) => { 
         console.log(response);
+        this.toasterService.success("Student Successfully Added");
         this.router.navigateByUrl('/students');
       },
       error: err => { 
