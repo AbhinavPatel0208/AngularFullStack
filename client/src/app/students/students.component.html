@@ -80,7 +80,7 @@
         </div>
 
         <div class="flex flex-col gap-5">
-          <button
+          <a [routerLink]="['/students/',item.id]"
             class="p-2 bg-blue-600 text-white rounded-full shadow-md hover:bg-blue-400"
           >
             <svg
@@ -99,7 +99,7 @@
                 d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
               />
             </svg>
-          </button>
+          </a>
 
           <button
             class="p-2 bg-red-600 text-white rounded-full shadow-md hover:bg-red-400"

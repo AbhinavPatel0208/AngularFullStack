@@ -8,7 +8,13 @@ import { Observable } from 'rxjs';
 })
 export class StudentsService {
 
+  apiUrl = "http://localhost:5057/api/student";
+
   constructor(private http: HttpClient) { }
   
-  getStudents = ():Observable<Student[]>=> this.http.get<Student[]>("http://localhost:5057/api/student")
+  getStudents = (): Observable<Student[]> => this.http.get<Student[]>(this.apiUrl)
+  
+  addStudent = (data: Student) => this.http.post(this.apiUrl, data);
+
+  getStudentMethod = (id: number): Observable<Student> => this.http.get<Student>(this.apiUrl + '/' + id);
 }
