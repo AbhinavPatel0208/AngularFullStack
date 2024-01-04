@@ -21,7 +21,8 @@ export class StudentFormComponent implements OnInit,OnDestroy{
   StudentsService = inject(StudentsService);
 
 
-  isEdit=false;
+  isEdit = false;
+  id = 0;
 
   constructor(private fb: FormBuilder,
     private activatedRouter: ActivatedRoute,
@@ -44,17 +45,31 @@ export class StudentFormComponent implements OnInit,OnDestroy{
   }
 
   onSubmit() { 
-    this.studentformSubscription=this.StudentsService.addStudent(this.form.value).subscribe({
-      next: (response) => { 
-        console.log(response);
-        this.toasterService.success("Student Successfully Added");
-        this.router.navigateByUrl('/students');
-      },
-      error: err => { 
-        console.log(err);
-      }
-    })
-    
+    if (!this.isEdit) {
+      this.studentformSubscription = this.StudentsService.addStudent(this.form.value).subscribe({
+        next: (response) => {
+          console.log(response);
+          this.toasterService.success("Student Successfully Added");
+          this.router.navigateByUrl('/students');
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    }
+    else { 
+      this.StudentsService.editStudent(this.id, this.form.value).subscribe(
+        {
+          next: value => {
+            this.toasterService.success("Successfully Edit");
+            this.router.navigateByUrl('/students')
+          },
+          error: err => { 
+            this.toasterService.error("Unable To Edit");
+          }
+        }
+      )
+    }
   }
 
   ngOnInit(): void {
@@ -64,6 +79,7 @@ export class StudentFormComponent implements OnInit,OnDestroy{
         next:(response)=> {
           console.log(response['id']);
           let id = response['id'];
+          this.id = id;
           if (!id) return;
 
           this.StudentsService.getStudentMethod(id).subscribe({

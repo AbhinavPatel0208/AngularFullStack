@@ -19,4 +19,6 @@ export class StudentsService {
   getStudentMethod = (id: number): Observable<Student> => this.http.get<Student>(this.apiUrl + '/' + id);
   
   deleteStudent = (id: number) => this.http.delete(this.apiUrl + '/' + id);
+
+  editStudent = (id: number,data:Student) => this.http.put(this.apiUrl + '/' + id,data);
 }
